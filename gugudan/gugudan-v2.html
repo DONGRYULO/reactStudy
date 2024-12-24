@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        class Gugudan extends React.Component {
+            constructor(props) {
+                super(props);
+
+                // 변하는 부분을 모두 state로 만들어준다.
+                this.state = {
+                    first: Math.ceil(Math.random() * 9),
+                    second: Math.ceil(Math.random() * 9),
+                    value : '', // value의 경우도 변하는 값이므로 state(상태)이다. SET 함수에 의해서만 상태가 변경된다.
+                    result : ''
+                };
+            }
+
+            onSubmit = (e) => {
+                e.preventDefault();
+                if(parseInt(this.state.value) === this.state.first * this.state.second) {
+                    this.setState((preState) => {
+                        return {
+                            result: '정답: ' + preState.value,
+                            first: Math.ceil(Math.random() * 9),
+                            second: Math.ceil(Math.random() * 9),
+                            value: ''
+                        }
+                    });
+                } else {
+                    this.setState({
+                        result: '땡',
+                        value: ''
+                    });
+                }
+                this.input.focus();
+            };
+
+            onChange = (e) => {
+                this.setState({ value: e.target.value });
+            };
+
+            input;
+            onRefInput = (e) => {
+                this.input = e;
+            }
+
+            // 컨텐츠 영역 제공(상태값이 변할 때마다 렌더링 함수 호출)
+            render() {
+                // 컴포넌트를 반환하기 전에 10초 정도 걸리는 작업이 있으면 성능이 매우 저하됨
+                console.log('렌더링');
+
+                return (
+                    <React.Fragment>
+                        <div>{this.state.first} 곱하기 {this.state.second}는?</div>
+                        <form onSubmit={this.onSubmit}>
+                            <input ref={this.onRefInput} type="number" value={this.state.value} onChange={this.onChange} />
+                            <button>입력</button>
+                        </form>
+                        <div>{this.state.result}</div>
+                    </React.Fragment>
+                );
+            }
+        }
+    </script>
+    <script type="text/babel">
+        ReactDOM.render(
+                <Gugudan/>
+            , document.getElementById('root'));
+    </script>
+</body>
+</html>
