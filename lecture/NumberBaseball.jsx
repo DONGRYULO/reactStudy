@@ -1,5 +1,5 @@
 import React, {Component, createRef} from 'react';
-import Try from './Try_hooks';
+import Try from './Try';
 
 // 숫자 4개를 겹치지 않게 랜덤으로 뽑기
 function getNumbers(){
@@ -69,13 +69,16 @@ class NumberBaseball extends Component {
                         ball++;
                     }
                 }
+
+                // 상태가 변경되면 렌더링이 다시 일어남
                 this.setState(() => {
                     return{
                         tries:  [...this.state.tries, {try: this.state.value, result: `${strike} 스트라이크, ${ball} 볼입니다.` }],
                         value: ''
                 }});
+                console.log("총 결과");
+                console.log(this.state.tries);
             }
-            console.log(this.state.tries);
         }
     };
 
@@ -93,12 +96,7 @@ class NumberBaseball extends Component {
     }
 
     render(){
-        // state = {
-        //     result: '',
-        //     value: '',
-        //     answer: getNumbers(),
-        //     tries: [] // 리액트에서 배열에 값을 넣을 때, push 사용 X
-        // };
+        console.log('렌더링');
         const {result, value, tries} = this.state;
 
         return (
@@ -110,6 +108,7 @@ class NumberBaseball extends Component {
                 <div>시도: {tries.length}</div>
                 <ul>
                     {
+                        // tries에 3개의 배열이 있는데 최근에 등록된 하나의 값만 나오는 이유는?
                         tries.map((v, i) => {
                             return(
                                 <Try key={`${i + 1}차 시도 :`} tryInfo={v}/>
